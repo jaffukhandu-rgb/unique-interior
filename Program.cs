@@ -12,14 +12,9 @@ if (string.IsNullOrEmpty(test))
 builder.Services.AddDbContext<InteriorShopDbContext>(options =>
 {
     var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DATABASE_URL not found");
-    }
-
     options.UseNpgsql(connectionString);
-}); builder.Services.AddControllersWithViews()
+});
+builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
 builder.Services.AddSession();
