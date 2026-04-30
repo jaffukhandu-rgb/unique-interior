@@ -6,9 +6,6 @@ namespace Unique_1.Models;
 
 public partial class InteriorShopDbContext : DbContext
 {
-    public InteriorShopDbContext()
-    {
-    }
 
     public InteriorShopDbContext(DbContextOptions<InteriorShopDbContext> options)
         : base(options)
