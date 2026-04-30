@@ -1,0 +1,58 @@
+﻿<h2>Category</h2>
+
+<input type="text" id="name" placeholder="Enter Category" />
+<button onclick="AddData()">Add</button>
+
+<ul id="list"></ul>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+    GetData();
+    });
+
+    // 🔹 GET DATA
+    const GetData = () => {
+    $.ajax({
+    url: '/Category/GetCategory',
+    type: 'GET',
+    success: function (result) {
+
+    let html = '';
+
+    for (let i = 0; i < result.length; i++) {
+    html += '<li>' + result[i].categoryName + '</li>';
+    }
+
+    $('#list').html(html);
+    },
+    error: function () {
+    alert("Error loading data");
+    }
+    });
+    };
+
+    // 🔹 ADD DATA
+    const AddData = () => {
+    let name = $('#name').val();
+
+    if (name === '') {
+    alert("Enter category name");
+    return;
+    }
+
+    $.ajax({
+    url: '/Category/AddCategory',
+    type: 'POST',
+    data: { CategoryName: name },
+    success: function () {
+    GetData();
+    $('#name').val('');
+    },
+    error: function () {
+    alert("Error adding data");
+    }
+    });
+    };
+</script>

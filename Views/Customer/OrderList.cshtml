@@ -1,0 +1,138 @@
+﻿<p>Total Orders: @Model.Count</p>
+@model List<Unique_1.Models.Order>
+
+@{
+    ViewData["Title"] = "OrderList";
+}
+<input type="text" id="searchBox" placeholder="Search orders..."
+       style="width:300px; padding:8px; margin-bottom:15px;">
+<h2>Order List</h2>
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No data found</p>
+}
+else
+{
+    @foreach (var item in Model)
+    {
+        <div class="card order-card">
+            <!-- 🔥 HEADER WITH BUTTONS -->
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+
+                <h4>Order #@item.OrderId</h4>
+
+                <div>
+                    <a href="/Customer/Edit/@item.OrderId" class="btn btn-blue">Edit</a>
+
+                    <form method="post" action="/Customer/Delete/@item.OrderId" style="display:inline;">
+                        <button type="submit"
+                                onclick="return confirm('Delete this order?')"
+                                class="btn btn-red">
+                            Delete
+                        </button>
+                    </form>
+                    <a href="/Customer/Invoice/@item.OrderId" target="_blank" class="btn btn-green">
+                        Print
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- CUSTOMER INFO -->
+            <p><b>Name:</b> @(item.Customer?.CustomerName ?? "N/A")</p>
+            <p><b>Address:</b> @(item.Customer?.Address ?? "N/A")</p>
+            <p><b>Phone:</b> @(item.Customer?.PhoneNumber ?? "N/A")</p>
+
+            <!-- TABLE -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Unit</th>
+                        <th>Rate</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (item.OrderDetails != null && item.OrderDetails.Count > 0)
+                    {
+                        @foreach (var d in item.OrderDetails)
+                        {
+                            <tr>
+                                <td>@(d.Category?.CategoryName ?? "-")</td>
+                                <td>@d.Unit</td>
+                                <td>@d.Rate</td>
+                                <td>@d.Amount</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">No items</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- 🔥 BILLING SUMMARY (PRO UI) -->
+            <div style="max-width:300px; margin-left:auto; margin-top:15px;">
+
+                <div style="display:flex; justify-content:space-between;">
+                    <span>Subtotal:</span>
+                    <span>₹ @item.OrderDetails.Sum(x => x.Amount)</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between;">
+                    <span>Discount:</span>
+                    <span style="color:red;">- ₹ @(item.Discount ?? 0)</span>
+                </div>
+                @{
+                    var subtotal = item.OrderDetails.Sum(x => x.Amount);
+                    var discount = item.Discount ?? 0;
+                    var taxPercent = item.Tax ?? 0;
+
+                    var afterDiscount = subtotal - discount;
+                    var taxAmount = (afterDiscount * taxPercent) / 100;
+                }
+
+                <div style="display:flex; justify-content:space-between;">
+                    <span>GST (@taxPercent%)</span>
+                    <span style="color:green;">+ ₹ @Convert.ToDecimal(taxAmount).ToString("0.00")</span>
+                </div>
+                <hr />
+
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:18px;">
+                    <span>Grand Total:</span>
+                    <span>₹ @(item.GrandTotal ?? 0)</span>
+                </div>
+
+            </div>
+        </div>
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+    $('#searchBox').on('keyup', function () {
+
+    let value = $(this).val().toLowerCase();
+
+    $('.order-card').each(function () {
+
+    let text = $(this).text().toLowerCase();
+
+    if (text.includes(value)) {
+    $(this).show();
+    } else {
+    $(this).hide();
+    }
+
+    });
+    });
+
+    });
+</script>

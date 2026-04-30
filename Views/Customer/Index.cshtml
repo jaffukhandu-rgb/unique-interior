@@ -1,0 +1,229 @@
+﻿<input type="hidden" id="orderIdHidden" />
+    <!-- CUSTOMER CARD -->
+    <div class="card">
+        <h3>Customer Information</h3>
+
+    <input type="text" id="custName" class="input" placeholder="Customer Name" />
+    <div id="nameError" class="error-text"></div>
+
+    <input type="text" id="address" class="input" placeholder="Address" />
+    <div id="addressError" class="error-text"></div>
+
+    <input type="text" id="phone" class="input" placeholder="Phone" />
+    <div id="phoneError" class="error-text"></div>
+</div>
+
+    <!-- WORK CARD -->
+    <div class="card">
+
+        <h3>Work Details</h3>
+
+    <div style="overflow-x:auto;">
+        <table id="workTable" class="table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <br>
+
+        <div style="display:flex; gap:10px;">
+            <button type="button" onclick="AddRow()" class="btn btn-success">+ Add Row</button>
+            <button type="button" id="saveBtn" class="btn btn-primary">Save</button>
+        </div>
+        
+        <h3>Total: ₹ <span id="total">0</span></h3>
+
+        <input type="number" id="discount" class="input" placeholder="Discount (₹)" onkeyup="UpdateTotal()" />
+
+        <input type="number" id="tax" class="input" placeholder="Tax (%)" onkeyup="UpdateTotal()" />
+
+        <h3>Grand Total: ₹ <span id="grandTotal">0</span></h3>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let categoryList = [];
+        let currentOrderId = 0;
+
+        //save
+        function SaveData() {
+
+        let works = [];
+
+        $('#workTable tbody tr').each(function () {
+
+        let row = $(this);
+
+        works.push({
+        CategoryId: parseInt(row.find('.category').val()) || 0,
+        Unit: parseFloat(row.find('.unit').val()) || 0,
+        Rate: parseFloat(row.find('.rate').val()) || 0,
+        Amount: parseFloat(row.find('.amount').val()) || 0
+        });
+        });
+
+        let data = {
+        OrderId: currentOrderId || 0,
+
+        CustomerName: $('#custName').val(),
+        Address: $('#address').val(),
+        PhoneNumber: $('#phone').val(),
+
+        Discount: parseFloat($('#discount').val()) || 0,
+        Tax: parseFloat($('#tax').val()) || 0,
+
+        GrandTotal: parseFloat($('#grandTotal').text()) || 0,
+
+        Works: works
+        };
+
+        console.log("FINAL SENDING:", data); // 🔥 MUST CHECK
+
+        $.ajax({
+        url: '/Customer/SaveData',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (res) {
+        alert(res);
+        window.location.href = '/Customer/OrderList';
+        },
+        error: function (err) {
+        console.log(err);
+        alert("Error ❌");
+        }
+        });
+        }
+        $(document).ready(function () {
+
+        $('#saveBtn').click(function () {
+        console.log("SAVE CLICKED 🔥");
+        SaveData();
+        });
+
+        });
+
+
+        // LOAD CATEGORY
+        function LoadCategories() {
+        return $.get('/Category/GetCategory')
+        .done(function(res){
+        categoryList = res;
+        });
+        }
+
+        // ADD ROW
+        function AddRow(selectedCategory = null) {
+
+        let row = `<tr>
+        <td><select class="category"></select></td>
+        <td><input type="number" class="unit" /></td>
+        <td><input type="number" class="rate" /></td>
+        <td><input type="number" class="amount" readonly /></td>
+        <td><button onclick="RemoveRow(this)">X</button></td>
+        </tr>`;
+
+        $('#workTable tbody').append(row);
+
+        let dropdown = $('#workTable tbody tr:last .category');
+
+        let options = '<option value="">Select</option>';
+        categoryList.forEach(x => {
+        options += `<option value="${x.categoryId}">${x.categoryName}</option>`;
+        });
+
+        dropdown.html(options);
+
+        if (selectedCategory) {
+        dropdown.val(selectedCategory);
+        }
+        }
+
+        // REMOVE
+        function RemoveRow(btn) {
+        $(btn).closest('tr').remove();
+        UpdateTotal();
+        }
+
+        // CALCULATE (LIVE)
+        $(document).on('keyup', '.unit, .rate', function () {
+
+        let row = $(this).closest('tr');
+
+        let unit = parseFloat(row.find('.unit').val()) || 0;
+        let rate = parseFloat(row.find('.rate').val()) || 0;
+
+        let amount = unit * rate;
+        row.find('.amount').val(amount);
+
+        UpdateTotal();
+        });
+
+        // TOTAL
+        function UpdateTotal() {
+
+        let total = 0;
+
+        $('.amount').each(function () {
+        total += parseFloat($(this).val()) || 0;
+        });
+
+        $('#total').text(total);
+
+        let discount = parseFloat($('#discount').val()) || 0;
+        let tax = parseFloat($('#tax').val()) || 0;
+
+        let afterDiscount = total - discount;
+        let taxAmount = (afterDiscount * tax) / 100;
+
+        let grandTotal = afterDiscount + taxAmount;
+
+        $('#grandTotal').text(grandTotal.toFixed(2));
+        }
+
+        
+        // PAGE LOAD
+        $(document).ready(function () {
+
+        LoadCategories().then(() => {
+
+        let editData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.EditData));
+
+        if (editData && editData.orderId) {
+
+        currentOrderId = editData.orderId;
+
+        console.log("EDIT ID:", currentOrderId); // must show > 0
+
+        $('#custName').val(editData.customer.customerName);
+        $('#address').val(editData.customer.address);
+        $('#phone').val(editData.customer.phoneNumber);
+
+        $('#discount').val(editData.discount);
+        $('#tax').val(editData.tax);
+
+        editData.orderDetails.forEach(x => {
+
+        AddRow(x.categoryId);
+
+        let row = $('#workTable tbody tr:last');
+
+        row.find('.unit').val(x.unit);
+        row.find('.rate').val(x.rate);
+        row.find('.amount').val(x.amount);
+        });
+
+        UpdateTotal();
+        }
+        });
+        });
+    </script>
+
+        

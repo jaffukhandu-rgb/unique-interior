@@ -1,0 +1,261 @@
+﻿@model Unique_1.Models.Order
+
+@{
+Layout = null;
+
+
+decimal subtotal = Model.OrderDetails?.Sum(x => x.Amount) ?? 0m;
+decimal discount = Model.Discount ?? 0;
+decimal taxPercent = Model.Tax ?? 0;
+
+decimal afterDiscount = subtotal - discount;
+decimal taxAmount = (afterDiscount * taxPercent) / 100;
+decimal grandTotal = Model.GrandTotal ?? 0;
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+
+
+<style>
+body {
+    margin: 0;
+    padding: 0; /* ❌ REMOVE ALL PADDING */
+    background: white;
+}
+
+.invoice-box {
+    width: 100%;
+    max-width: 170mm;  /* 🔥 SAFE WIDTH */
+    margin: auto;
+    padding: 10px;     /* 🔥 SMALL PADDING ONLY */
+    box-sizing: border-box;
+}
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .title {
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    .section {
+        margin-top: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th {
+        background: #2c3e50;
+        color: white;
+        padding: 10px;
+    }
+
+    td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .totals {
+        margin-top: 30px;
+        width: 300px;
+        margin-left: auto;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    .grand {
+        border-top: 2px solid #000;
+        padding-top: 10px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .btn-area {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .print { background: #3498db; color: white; }
+    .pdf { background: #27ae60; color: white; }
+    .wa { background: #25D366; color: white; }
+
+    @@media print {
+        .btn-area { display: none; }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<div class="invoice-box">
+
+```
+<!-- HEADER -->
+<div class="top">
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="/images/unique.jpg" style="height:60px;" />
+        <div>
+            <div class="title">Unique Interior</div>
+            <div>Interior Work Invoice</div>
+        </div>
+    </div>
+
+    <div>
+        <div><b>Invoice #:</b> @Model.OrderId</div>
+        <div><b>Date:</b> @DateTime.Now.ToShortDateString()</div>
+    </div>
+</div>
+
+<!-- CUSTOMER -->
+<div class="section">
+    <h4>Customer Details</h4>
+    <p><b>Name:</b> @Model.Customer?.CustomerName</p>
+    <p><b>Address:</b> @Model.Customer?.Address</p>
+    <p><b>Phone:</b> @Model.Customer?.PhoneNumber</p>
+</div>
+
+<!-- 🔥 PDF CONTENT START -->
+<div id="invoiceContent">
+
+    <!-- TABLE -->
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Unit</th>
+                <th>Rate</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@item.Category?.CategoryName</td>
+                    <td>@item.Unit</td>
+                    <td>₹ @Convert.ToDecimal(item.Rate).ToString("0.00")</td>
+                    <td>₹ @Convert.ToDecimal(item.Amount).ToString("0.00")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- TOTAL -->
+    <div class="totals">
+
+        <div class="row">
+            <span>Subtotal</span>
+            <span>₹ @subtotal.ToString("0.00")</span>
+        </div>
+
+        <div class="row">
+            <span>Discount</span>
+            <span>- ₹ @discount.ToString("0.00")</span>
+        </div>
+
+        <div class="row">
+            <span>GST (@taxPercent%)</span>
+            <span>+ ₹ @taxAmount.ToString("0.00")</span>
+        </div>
+
+        <div class="row grand">
+            <span>Grand Total</span>
+            <span>₹ @grandTotal.ToString("0.00")</span>
+        </div>
+
+    </div>
+
+</div>
+<!-- 🔥 PDF CONTENT END -->
+```
+
+</div>
+
+<!-- BUTTONS -->
+
+<div class="btn-area">
+    <button onclick="window.print()" class="print">Print</button>
+    <button onclick="downloadPDF()" class="pdf">Download PDF</button>
+    <button onclick="sendWhatsApp()" class="wa">Send WhatsApp</button>
+</div>
+
+<!-- JS -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+function downloadPDF() {
+
+    let element = document.querySelector('.invoice-box');
+
+    let opt = {
+        margin: [0, 0, 0, 0],   // 🔥 NO MARGIN
+        filename: 'Invoice.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: {
+            scale: 1,           // 🔥 KEY FIX (NOT 2 or 3)
+            scrollY: 0
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
+function sendWhatsApp() {
+
+    let phone = "@Model.Customer?.PhoneNumber";
+
+    phone = phone.replace(/\D/g, '');
+    if (!phone.startsWith("91")) {
+        phone = "91" + phone;
+    }
+
+    let message = `Hello ${"@Model.Customer?.CustomerName"},
+Your invoice is ready.
+
+Total Amount: ₹ ${"@Model.GrandTotal"}
+http://yourwebsite.com/Customer/Invoice/${"@Model.OrderId"}
+
+Thank you - Unique Interior`;
+
+    let url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+    window.open(url, '_blank');
+}
+</script>
+
+</body>
+</html>

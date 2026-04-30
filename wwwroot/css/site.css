@@ -1,0 +1,282 @@
+/* 🔹 BODY */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+}
+
+/* 🔹 LAYOUT */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 🔹 SIDEBAR */
+.sidebar {
+    width: 220px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    transition: 0.3s;
+    position: relative;
+}
+
+    .sidebar h2 {
+        margin-bottom: 20px;
+    }
+
+    .sidebar a {
+        display: block;
+        color: #ddd;
+        text-decoration: none;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+
+        .sidebar a:hover {
+            background: #1abc9c;
+        }
+
+        .sidebar a.active {
+            background: #16a085;
+        }
+
+/* 🔹 MAIN */
+.main {
+    flex: 1;
+    overflow-x: hidden;
+}
+
+/* 🔹 TOPBAR */
+.topbar {
+    background: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 🔹 CONTENT */
+.content {
+    padding: 20px;
+}
+
+/* 🔹 CARD */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    margin-bottom: 20px;
+}
+
+/* 🔹 TABLE (DESKTOP) */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table th {
+        background: #34495e;
+        color: white;
+        padding: 10px;
+    }
+
+    .table td {
+        padding: 6px;
+        border: 1px solid #ddd;
+    }
+
+/* 🔹 BUTTON */
+
+.btn-green {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-blue {
+    background-color: #2980b9;
+    color: white;
+}
+
+.btn-red {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+/* 🔹 TOGGLE BUTTON */
+.toggle-btn {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* 🔥 MOBILE SIDEBAR */
+@media (max-width: 768px) {
+
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -220px;
+        top: 0;
+        width: 220px;
+        height: 100%;
+        z-index: 1000;
+    }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+    .main {
+        width: 100%;
+    }
+
+    .topbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .content {
+        padding: 10px;
+    }
+}
+
+/* 🔥 MOBILE TABLE → CARD UI */
+@media (max-width: 768px) {
+
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+        .table tr {
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 8px #ccc;
+        }
+
+        .table td {
+            border: none;
+            padding: 6px 0;
+        }
+
+            .table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                display: block;
+                color: #34495e;
+                margin-bottom: 3px;
+            }
+}
+/* 🔴 ERROR STYLE */
+.error {
+    border: 1px solid red !important;
+}
+
+.error-text {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-green {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-blue {
+    background-color: #2980b9;
+    color: white;
+}
+
+.btn-red {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn {
+    display: inline-block; /* ✅ FIX */
+    width: auto; /* ✅ FIX */
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bill-box {
+    max-width: 280px;
+    margin-left: auto;
+}
+
+    .bill-box div {
+        display: flex;
+        justify-content: space-between;
+        margin: 4px 0;
+    }
+
+.total {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+/* 🔴 INPUT ERROR STYLE */
+.input-error {
+    border: 2px solid red !important;
+    background-color: #ffe6e6;
+}
+
+/* 🔴 ERROR TEXT */
+.error-msg {
+    color: red;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+img {
+    object-fit: contain;
+}

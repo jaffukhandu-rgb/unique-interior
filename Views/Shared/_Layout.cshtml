@@ -1,0 +1,194 @@
+﻿@{
+    var user = Context.Session.GetString("User");
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Unique Interior</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+            /* 🔥 GLOBAL */
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', sans-serif;
+                background: #f4f6f9;
+            }
+
+            /* 🔥 LAYOUT */
+            .layout {
+                display: flex;
+                min-height: 100vh;
+            }
+
+            /* 🔥 SIDEBAR */
+            .sidebar {
+                width: 240px;
+                background: #2c3e50;
+                color: white;
+                padding: 20px 15px;
+                position: fixed;
+                height: 100%;
+            }
+
+                .sidebar h2 {
+                    font-size: 22px;
+                    margin-bottom: 30px;
+                }
+
+                .sidebar a {
+                    display: block;
+                    padding: 12px;
+                    color: #ddd;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    margin-bottom: 10px;
+                    transition: 0.2s;
+                }
+
+                    .sidebar a:hover {
+                        background: #1abc9c;
+                        color: white;
+                    }
+
+                    .sidebar a.active {
+                        background: #16a085;
+                    }
+
+            /* 🔥 MAIN */
+            .main {
+                margin-left: 240px;
+                width: 100%;
+            }
+
+            /* 🔥 TOPBAR */
+            .topbar {
+                background: white;
+                padding: 12px 25px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            }
+
+            .logo-area {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+                .logo-area img {
+                    height: 55px;
+                }
+
+            .logo-text {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+
+            .welcome {
+                font-size: 14px;
+                color: #555;
+            }
+
+            /* 🔥 CONTENT */
+            .content {
+                padding: 25px;
+            }
+
+            /* 🔥 MOBILE */
+            @@media (max-width: 768px) {
+                .sidebar {
+                    left: -240px;
+                    transition: 0.3s;
+                }
+
+                    .sidebar.active {
+                        left: 0;
+                    }
+
+                .main {
+                    margin-left: 0;
+                }
+            }
+
+            .toggle-btn {
+                border: none;
+                background: #2c3e50;
+                color: white;
+                padding: 6px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- 🔥 SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+            <h2>Unique Interior</h2>
+
+            <a href="/Customer/Dashboard">📊 Dashboard</a>
+            <a href="/Customer/Index">👤 Customer</a>
+            <a href="/Category/Index">📁 Category</a>
+            <a href="/Customer/OrderList">📄 Orders</a>
+        </div>
+
+        <!-- 🔥 MAIN -->
+        <div class="main">
+
+            <!-- 🔥 TOPBAR -->
+            <div class="topbar" style="display:flex; align-items:center; justify-content:space-between;">
+
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <img src="~/images/unique.jpg" alt="Logo" style="height:60px;">
+                    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <span>Welcome</span>
+                    <span>MR. Shabbir</span>
+
+
+                    @{
+                        var user = Context.Session.GetString("User");
+                    }
+
+                    @if (!string.IsNullOrEmpty(user))
+                    {
+                        <a href="/Account/Logout" class="btn btn-danger"
+                               onclick="return confirm('Logout?')">
+                            Logout
+                        </a>
+                    }
+                </div>
+
+            </div>
+            <!-- 🔥 CONTENT -->
+            <div class="content">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+            function toggleSidebar() {
+                document.getElementById("sidebar").classList.toggle("active");
+            }
+    </script>
+
+</body>
+</html>

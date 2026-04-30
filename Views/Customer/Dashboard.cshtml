@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+
+<div class="stats">
+
+    <div class="card stat-card">
+        <h3>Total Orders</h3>
+        <h1>@ViewBag.TotalOrders</h1>
+    </div>
+
+    <div class="card stat-card">
+        <h3>Total Customers</h3>
+        <h1>@ViewBag.TotalCustomers</h1>
+    </div>
+
+    <div class="card stat-card">
+        <h3>Total Revenue</h3>
+        <h1>₹ @ViewBag.TotalRevenue</h1>
+    </div>
+
+</div>
+
+<div class="card">
+    <h3>Recent Orders</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in ViewBag.RecentOrders)
+            {
+                <tr>
+                    <td>@item.OrderId</td>
+                    <td>@item.CustomerName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
