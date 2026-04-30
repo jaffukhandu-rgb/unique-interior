@@ -4,8 +4,16 @@ using Unique_1.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<InteriorShopDbContext>(options =>
-        options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL")));
-builder.Services.AddControllersWithViews()
+{
+    var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new Exception("DATABASE_URL not found");
+    }
+
+    options.UseNpgsql(connectionString);
+}); builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
 builder.Services.AddSession();
