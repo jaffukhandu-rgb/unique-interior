@@ -8,6 +8,12 @@ namespace Unique_1.Controllers
 {
     public class CustomerController : Controller
     {
+        private readonly InteriorShopDbContext _context;
+
+        public CustomerController(InteriorShopDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult Index()
         {
@@ -21,8 +27,7 @@ namespace Unique_1.Controllers
             if (model == null)
                 return Json("Model null ❌");
 
-            var db = new InteriorShopDbContext();
-
+            var db = _context;
             try
             {
                 // 🔥 EDIT
@@ -113,8 +118,7 @@ namespace Unique_1.Controllers
         }
         public IActionResult Edit(int id)
         {
-            var db = new InteriorShopDbContext();
-
+            var db = _context;
             var order = db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.OrderDetails)
@@ -152,8 +156,7 @@ namespace Unique_1.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var db = new InteriorShopDbContext();
-
+            var db = _context;
             var order = db.Orders
                 .Include(o => o.OrderDetails)
                 .FirstOrDefault(o => o.OrderId == id);
@@ -169,8 +172,7 @@ namespace Unique_1.Controllers
         }
         public IActionResult Dashboard()
         {
-            InteriorShopDbContext db = new InteriorShopDbContext();
-
+            var db = _context;
             var totalOrders = db.Orders.Count();
             var totalCustomers = db.Customers.Count();
             var totalRevenue = db.OrderDetails.Sum(x => x.Amount);
@@ -193,8 +195,7 @@ namespace Unique_1.Controllers
         }
         public IActionResult Invoice(int id)
         {
-            var db = new InteriorShopDbContext();
-
+            var db = _context;
             var order = db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.OrderDetails)
@@ -210,8 +211,7 @@ namespace Unique_1.Controllers
         }
         public IActionResult OrderList()
         {
-            var db = new InteriorShopDbContext();
-
+            var db = _context;
             var data = db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.OrderDetails)
