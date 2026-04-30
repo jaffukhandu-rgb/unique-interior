@@ -57,9 +57,11 @@ public partial class InteriorShopDbContext : DbContext
             entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF471DD7A6");
 
             entity.Property(e => e.OrderDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
+                .HasDefaultValueSql("NOW()")
+                .HasColumnType("timestamp");
+
+            entity.Property(e => e.TotalAmount)
+                .HasColumnType("numeric(18, 2)");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CustomerId)
