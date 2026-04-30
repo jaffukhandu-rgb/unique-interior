@@ -2,6 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Unique_1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var test = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (string.IsNullOrEmpty(test))
+{
+    throw new Exception("❌ DATABASE_URL IS NULL");
+}
 
 builder.Services.AddDbContext<InteriorShopDbContext>(options =>
 {
