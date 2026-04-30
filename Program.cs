@@ -31,12 +31,11 @@ app.UseSession();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+app.UseStaticFiles();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}")
-    .WithStaticAssets();
+    ;
 
 
 app.Run();
