@@ -12,16 +12,16 @@ builder.Services.AddSession();
 
 var app = builder.Build();
 
-// ✅ THIS IS CORRECT WAY
-if (app.Environment.IsDevelopment())
+app.UseExceptionHandler(errorApp =>
 {
-    app.UseDeveloperExceptionPage(); // SHOW REAL ERROR
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+    errorApp.Run(async context =>
+    {
+        var exceptionHandlerPathFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+        var exception = exceptionHandlerPathFeature?.Error;
+
+        await context.Response.WriteAsync(exception?.ToString() ?? "Error");
+    });
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
