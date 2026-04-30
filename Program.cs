@@ -4,8 +4,7 @@ using Unique_1.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<InteriorShopDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+        options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL")));
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
