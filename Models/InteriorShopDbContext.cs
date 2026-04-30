@@ -24,13 +24,13 @@ public partial class InteriorShopDbContext : DbContext
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
     public DbSet<Users1> Users1 { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql("Host=db.hcjkjewrxqavknvepfex.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=Tahakhandu52;SSL Mode=Require;Trust Server Certificate=true");
-        }
-    }
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    if (!optionsBuilder.IsConfigured)
+    //    {
+    //        optionsBuilder.UseNpgsql("Host=db.hcjkjewrxqavknvepfex.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=Tahakhandu52;SSL Mode=Require;Trust Server Certificate=true");
+    //    }
+    //}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
