@@ -41,7 +41,7 @@
         
         <h3>Total: ₹ <span id="total">0</span></h3>
 
-        <input type="number" id="discount" class="input" placeholder="Discount (₹)" onkeyup="UpdateTotal()" />
+        <input type="number" id="discount" class="input" placeholder="Discount (%)" onkeyup="UpdateTotal()" />
 
         <input type="number" id="tax" class="input" placeholder="Tax (%)" onkeyup="UpdateTotal()" />
 
@@ -177,17 +177,18 @@
 
         $('#total').text(total);
 
-        let discount = parseFloat($('#discount').val()) || 0;
+        let discountPercent = parseFloat($('#discount').val()) || 0;
         let tax = parseFloat($('#tax').val()) || 0;
 
-        let afterDiscount = total - discount;
+        let discountAmount = (total * discountPercent) / 100;
+
+        let afterDiscount = total - discountAmount;
         let taxAmount = (afterDiscount * tax) / 100;
 
         let grandTotal = afterDiscount + taxAmount;
 
         $('#grandTotal').text(grandTotal.toFixed(2));
         }
-
         
         // PAGE LOAD
         $(document).ready(function () {
