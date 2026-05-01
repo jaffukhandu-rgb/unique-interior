@@ -4,7 +4,12 @@ using Unique_1.Models;
 
 public class AccountController : Controller
 {
-    InteriorShopDbContext db = new InteriorShopDbContext();
+    private readonly InteriorShopDbContext _context;
+
+    public AccountController(InteriorShopDbContext context)
+    {
+        _context = context;
+    }
 
     public IActionResult Login()
     {
@@ -14,7 +19,7 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult Login(string username, string password)
     {
-        var user = db.Users1
+        var user = _context.Users1
         .FirstOrDefault(x =>
         x.Username.ToLower().Trim() == username.ToLower().Trim() &&
         x.Password.Trim() == password.Trim()

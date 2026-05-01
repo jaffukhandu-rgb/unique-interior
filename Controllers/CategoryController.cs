@@ -6,8 +6,12 @@ namespace Unique_1.Controllers
 {
     public class CategoryController : Controller
     {
-        InteriorShopDbContext db = new InteriorShopDbContext();
+        private readonly InteriorShopDbContext _context;
 
+        public CategoryController(InteriorShopDbContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
             return View();
@@ -15,7 +19,7 @@ namespace Unique_1.Controllers
 
         public JsonResult GetCategory()
         {
-            var data = db.Categories.ToList();
+            var data = _context.Categories.ToList();
             return Json(data);
         }
 
@@ -25,15 +29,15 @@ namespace Unique_1.Controllers
             {
                 return Json("Category name required");
             }
-            var exists = db.Categories
+            var exists = _context.Categories
            .Any(x => x.CategoryName.ToLower() == c.CategoryName.ToLower());
 
             if (exists)
             {
                 return Json("Category already exists");
             }
-            db.Categories.Add(c);
-            db.SaveChanges();
+            _context.Categories.Add(c);
+            _context.SaveChanges();
 
             return Json("Added");
 
