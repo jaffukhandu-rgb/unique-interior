@@ -43,7 +43,17 @@ else
             <p><b>Name:</b> @(item.Customer?.CustomerName ?? "N/A")</p>
             <p><b>Address:</b> @(item.Customer?.Address ?? "N/A")</p>
             <p><b>Phone:</b> @(item.Customer?.PhoneNumber ?? "N/A")</p>
-
+            <p>
+                <b>Status:</b>
+                @if (item.PaymentStatus == "Paid")
+                {
+                    <span class="badge bg-success">Paid</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Unpaid</span>
+                }
+            </p>
             <!-- TABLE -->
             <table class="table">
                 <thead>
@@ -65,14 +75,6 @@ else
                                 <td>@d.Unit</td>
                                 <td>@d.Rate</td>
                                 <td>@d.Amount</td>
-                                <td>
-                                    @if (item.PaymentStatus == "Paid")
-                                    {
-                                        <span class="badge bg-success">Paid</span                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Unpaid</span>                                    }
-                                </td>
                             </tr>
                         }
                     }
