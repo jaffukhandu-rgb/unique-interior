@@ -46,6 +46,11 @@
         <input type="number" id="tax" class="input" placeholder="Tax (%)" onkeyup="UpdateTotal()" />
 
         <h3>Grand Total: ₹ <span id="grandTotal">0</span></h3>
+        <label>Status:</label>
+        <select id="paymentStatus">
+            <option value="Unpaid">Unpaid</option>
+            <option value="Paid">Paid</option>
+        </select>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -80,6 +85,7 @@
         Tax: parseFloat($('#tax').val()) || 0,
 
         GrandTotal: parseFloat($('#grandTotal').text()) || 0,
+        PaymentStatus: $('#paymentStatus').val(),
 
         Works: works
         };
@@ -209,6 +215,7 @@
 
         $('#discount').val(editData.discount);
         $('#tax').val(editData.tax);
+        $('#paymentStatus').val(editData.paymentStatus || "Unpaid");
 
         editData.orderDetails.forEach(x => {
 

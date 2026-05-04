@@ -18,5 +18,6 @@ public partial class Order
     public decimal? Discount { get; set; }
     public decimal? Tax { get; set; }
     public decimal? GrandTotal { get; set; }
+    public string PaymentStatus { get; set; }
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

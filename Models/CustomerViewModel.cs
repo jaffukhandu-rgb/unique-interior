@@ -8,6 +8,7 @@
     public decimal Discount { get; set; }
     public decimal Tax { get; set; }
     public decimal GrandTotal { get; set; }
+    public string PaymentStatus { get; set; }
 
     public List<WorkVM> Works { get; set; } = new();
 }

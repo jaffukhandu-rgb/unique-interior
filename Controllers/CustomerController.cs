@@ -50,6 +50,9 @@ namespace Unique_1.Controllers
                     order.Discount = model.Discount;
                     order.Tax = model.Tax;
                     order.GrandTotal = model.GrandTotal;
+                    order.PaymentStatus = string.IsNullOrEmpty(model.PaymentStatus)
+                    ? "Unpaid"
+                    : model.PaymentStatus;
 
                     // remove old items
                     db.OrderDetails.RemoveRange(order.OrderDetails);
@@ -89,7 +92,10 @@ namespace Unique_1.Controllers
                     CustomerId = customer.CustomerId,
                     Discount = model.Discount,
                     Tax = model.Tax,
-                    GrandTotal = model.GrandTotal
+                    GrandTotal = model.GrandTotal,
+                    PaymentStatus = string.IsNullOrEmpty(model.PaymentStatus)
+                    ? "Unpaid"
+                    : model.PaymentStatus
                 };
 
                 db.Orders.Add(orderNew);
