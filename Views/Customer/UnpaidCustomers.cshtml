@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model List<(int OrderId, string CustomerName, string PhoneNumber, decimal? GrandTotal)>
+
+<h2>💸 Unpaid Customers</h2>
+
+@if (!Model.Any())
+{
+    <p>No unpaid records</p>
 }
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.OrderId</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.PhoneNumber</td>
+                    <td style="color:red;">₹ @item.GrandTotal</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
