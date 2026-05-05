@@ -63,6 +63,27 @@
                         background: #16a085;
                     }
 
+            .nav-link {
+                display: block;
+                padding: 12px 15px;
+                margin: 6px 0;
+                border-radius: 10px;
+                color: #fff;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+
+                .nav-link:hover {
+                    background: #3a4a5a;
+                }
+
+            .highlight {
+                background: linear-gradient(135deg, #f59e0b, #facc15);
+                color: #000;
+                font-weight: bold;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            }
+
             /* 🔥 MAIN */
             .main {
                 margin-left: 240px;
@@ -140,11 +161,11 @@
         <div class="sidebar" id="sidebar">
             <h2>Unique Interior</h2>
 
-            <a href="/Customer/Dashboard">📊 Dashboard</a>
-            <a href="/Customer/Index">👤 Customer</a>
-            <a href="/Category/Index">📁 Category</a>
-            <a href="/Customer/OrderList">📄 Orders</a>
-            <a href="/Customer/UnpaidCustomers" class="btn btn-warning">
+            <a href="/Customer/Dashboard" class="nav-link">📊 Dashboard</a>
+            <a href="/Customer/Index" class="nav-link">👤 Customer</a>
+            <a href="/Category/Index" class="nav-link">📁 Category</a>
+            <a href="/Customer/OrderList" class="nav-link">📄 Orders</a>
+            <a href="/Customer/UnpaidCustomers" class="nav-link highlight">
                 💸 Unpaid Customers
             </a>
         </div>
