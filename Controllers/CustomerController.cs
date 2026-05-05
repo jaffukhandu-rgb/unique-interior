@@ -237,6 +237,23 @@ namespace Unique_1.Controllers
 
             base.OnActionExecuting(context);
         }
+
+        public IActionResult UnpaidCustomers()
+        {
+            var data = _context.Orders
+                .Include(o => o.Customer)
+                .Where(o => o.PaymentStatus == "Unpaid")
+                .Select(o => new
+                {
+                    o.OrderId,
+                    o.GrandTotal,
+                    o.Customer.CustomerName,
+                    o.Customer.PhoneNumber
+                })
+                .ToList();
+
+            return View(data);
+        }
     }
 
 }
