@@ -1,5 +1,4 @@
-﻿@model List<(int OrderId, string CustomerName, string PhoneNumber, decimal? GrandTotal)>
-
+﻿@model IEnumerable<dynamic>
 <h2>💸 Unpaid Customers</h2>
 
 @if (!Model.Any())
