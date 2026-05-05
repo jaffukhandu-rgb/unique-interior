@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<dynamic>
 <h2>💸 Unpaid Customers</h2>
 
+<h3 style="color:#dc2626; font-weight:bold;">
+    💸 Total Pending: ₹ @String.Format("{0:N2}", Model.Sum(x => (decimal?)x.GrandTotal ?? 0))
+</h3>
+
 @if (!Model.Any())
 {
     <p>No unpaid records</p>
